@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+body{
+ 
+    margin: 0px;
+}
+
+.navbar .nav-link {
+    color: black;
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.navbar .nav-link:hover{
+    text-decoration: underline;
+    opacity: 60%;
+}
+
+.main_container {
+    display : grid;
+    grid-template-columns: auto auto;
+    padding: 20px;
+}
+.main_container div {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 15px;
+    font-size: 30px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.addUser_form div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.addUser_form label {
+    text-align: left;
+    font-weight: bold;
+}
+
+.addUser_form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.user-card {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.user-card p {
+    margin-top: 0;
+    color: #333;
+    text-align: left;
+}
+
+
+/* Para arreglar el header de alta de usuarios */
+.card-header {
+    margin: 0 !important;
+}
+
+.card {
+    padding: 0 !important;
+}
