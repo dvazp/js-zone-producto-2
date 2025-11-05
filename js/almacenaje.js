@@ -1,0 +1,1 @@
+//Para las operaciones CRUD comunes en todas las paginas

@@ -21,47 +21,60 @@
                     <li class="nav-item"><a class="nav-link" href="gestion_usuarios.html">Gestión de Usuarios</a></li>
                     <li class="nav-item"><a class="nav-link" href="gestion_voluntarios..html">Gestión de Voluntarios</a></li>
                     <li class="nav-item ms-lg-auto">
-                        <a class="nav-link" id="user_header" href="#">No Login</a>
+                        <a class="nav-link" id="user_header" href="#">-no login-</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
     <div class="title_header">
-            <h2 class="d-flex justify-content-center mt-5">Gestión de Usuarios</h2>
+        <h2 class="d-flex justify-content-center mt-5">Gestión de Usuarios</h2>
     </div>
-    <div class="container my-5 main_container">
-        <div class="card shadow-sm bg-light">
-                <div class="card-header bg-success text-white text-center px-4">
-                    <h2>Alta de Usuarios</h2>
+
+    <div class="container my-5">
+        <div class="row g-4">
+            <div class="col-12 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white text-center">
+                        <h5 class="mb-0">Alta de Usuarios</h5>
+                    </div>
+                    <div class="card-body">
+                        <form class="addUser_form" id="addUser_form">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" id="nombre" name="nombre" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" id="password" name="password" class="form-control" required>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button id="addUser_button" class="btn btn-success px-4" type="button">Añadir</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            <form class="addUser_form" method="POST" id="addUser_form">
-                <div>
-                    <label class="labelClass">Nombre</label>
-                    <input type="text" id="nombre" name="nombre" required>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white text-center">
+                        <h5 class="mb-0">Consulta y Borrado</h5>
+                    </div>
+                    <div class="card-body">
+                        <form class="consultaUser_form" id="consultaUser_form">
+                            <div id="users_list" class="d-grid gap-2"></div>
+                        </form>
+                    </div>
                 </div>
-                <div>
-                    <label class="labelClass">Email</label>
-                    <input type="text" id="email" name="email" required>
-                </div>
-                <div>
-                    <label class="labelClass">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <div>
-                    <button id="addUser_button" class="btn btn-success px-4" type="submit">Añadir</button>
-                </div>
-            </form>
-        </div>
-        <div class="card shadow-sm bg-light mx-auto">
-            <form class="consultaUser_form" method="POST" id="consultaUser_form">
-                <div class="title_form">
-                    <h2>Consulta y Borrado</h2>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/usuarios.js" type="module"></script>
+    <script src="../js/int_4_usuarios.js" type="module"></script>
 </body>
 </html>
