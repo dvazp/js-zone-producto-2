@@ -2,11 +2,11 @@
 import {usuarios} from './datos.js';
 
 // Índice por nombre de usuario para búsqueda O(1)
-const usuariosByName = new Map(usuarios.map(u => [u.user, u]));
+const usuariosByName = new Map(usuarios.map(u => [u.email, u]));
 
 // Referencias a elementos del DOM usados por el formulario de login
 const formLogin = document.getElementById("login_form");
-const user = document.getElementById("user");
+const correo = document.getElementById("user");
 const password = document.getElementById("password");
 const userHeader = document.getElementById("user_header");
 
@@ -24,7 +24,7 @@ formLogin?.addEventListener("submit", LoginUser);
 function LoginUser(event){
     event.preventDefault();
 
-    const inputUser = user.value.trim();
+    const inputUser = correo.value.trim();
     const inputPassword = password.value;
 
     if(!inputUser || !inputPassword){
@@ -44,6 +44,11 @@ function LoginUser(event){
     }
 
     // Credenciales correctas
-    userHeader.textContent = inputUser; // evita innerHTML
     alert("Inicio de sesión correcto");
+    localStorage.setItem(UsuarioActivo,correo.value) // Guardamos en localStorage el correo del usuario cuando hace login.
+
+}
+
+function mostrarUsuarioActivo() {
+
 }
