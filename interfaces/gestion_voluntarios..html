@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../styles/gestionVoluntariados.css">
     <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <script type="module" src="../js/gestionVoluntariados.js"></script>
+    <script type="module" src="../js/login.js"></script>
 </head>
 
 <body class="bg-light">
@@ -23,7 +24,8 @@
                     <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="gestion_usuarios.html">Gestión de Usuarios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="gestion_voluntarios..html">Gestión de Voluntarios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gestion_voluntarios..html">Gestión de Voluntarios</a>
+                    </li>
                     <li class="nav-item ms-lg-auto"><a class="nav-link" id="user_header" href="#">No Login</a></li>
                 </ul>
             </div>
@@ -32,7 +34,7 @@
 
     <div class="container">
         <h2 class="text-center my-5">Gestión de Voluntariados</h2>
-        
+
         <div class="row g-4">
             <div class="col-lg-6">
                 <div class="card shadow-sm">
@@ -53,7 +55,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="descripcion" class="form-label">Descripción</label>
-                                <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                                <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
+                                    required></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="tipo" class="form-label">Tipo</label>
@@ -62,7 +65,8 @@
                                     <option value="Peticion">Petición</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100" id="addVoluntariado_button">Añadir</button>
+                            <button type="submit" class="btn btn-primary w-100"
+                                id="addVoluntariado_button">Añadir</button>
                         </form>
                     </div>
                 </div>
@@ -85,4 +89,5 @@
 
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

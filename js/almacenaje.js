@@ -4,7 +4,6 @@ export function obtenerUsuarioActivo() { // Obtiene el Usuario Activo y lo Devue
     const usuarioActivo = localStorage.getItem("UsuarioActivo");
     return usuarioActivo;
 }
-
 // IndexedDB de usuarios
 export let db;
 export const DB_NAME = 'UsersDB';
@@ -30,3 +29,7 @@ export const initDB = () => {
     });
 };
 
+// Funcion que guarda el usuario logueado como usuario activo.
+export function loguearUsuario(usuario) {
+    localStorage.setItem("UsuarioActivo", usuario);
+}

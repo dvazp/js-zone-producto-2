@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Importa la lista de usuarios simulados desde datos.js
 import { usuarios } from './datos.js';
 import { obtenerUsuarioActivo } from './almacenaje.js';
+import { loguearUsuario } from './almacenaje.js';
 
 // Índice por nombre de usuario para búsqueda O(1)
 const usuariosByName = new Map(usuarios.map(u => [u.email, u]));
@@ -50,7 +51,7 @@ function LoginUser(event){
 
     // Credenciales correctas
     alert("Inicio de sesión correcto");
-    localStorage.setItem("UsuarioActivo", correo.value) // Guardamos en localStorage el correo del usuario cuando hace login.
+    loguearUsuario(correo.value)
 }
 
 // Funcion que MuestraUsuarioActivo
