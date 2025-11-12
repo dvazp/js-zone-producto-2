@@ -1,27 +1,17 @@
-// IndexedDB
-let db;
-const DB_NAME = 'UsersDB';
-const DB_VERSION = 1;
-const STORE_NAME = 'users';
+//Importamos las funciones de almacenaje
+import { obtenerUsuarioActivo, initDB, db, STORE_NAME } from './almacenaje.js';
 
-const initDB = () => {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, DB_VERSION);
+const userHeader = document.getElementById("user_header");
 
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => {
-            db = request.result;
-            resolve(db);
-        };
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
-            if (!db.objectStoreNames.contains(STORE_NAME)) {
-                const store = db.createObjectStore(STORE_NAME, { keyPath: 'email' });
-                store.createIndex('nombre', 'nombre', { unique: false });
-            }
-        };
-    });
-};
+// Funcion que Muestra el Usuario Activo
+function mostrarUsuarioActivo() {
+    let usuarioActivo = obtenerUsuarioActivo();
+    if (usuarioActivo) {
+        userHeader.textContent = usuarioActivo;
+    } else {
+        userHeader.textContent = "-no login-";
+    }
+}
 
 // Funciones de mostrar y borrar los usuarios
 async function listaUsuarios() {
@@ -146,6 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         await initDB();
         await listaUsuarios();
+        mostrarUsuarioActivo();
 
         const addBtn = document.getElementById('addUser_button');
         if (addBtn) addBtn.addEventListener('click', (e) => {

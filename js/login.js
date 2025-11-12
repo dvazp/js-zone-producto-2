@@ -59,7 +59,7 @@ function mostrarUsuarioActivo() {
     if (usuarioActivo) {
         userHeader.textContent = usuarioActivo;
     } else {
-        userHeader.textContent = "No Login";
+        userHeader.textContent = "-no login-";
     }
 }
 
