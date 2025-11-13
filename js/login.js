@@ -4,13 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mostramos el usuario activo
     mostrarUsuarioActivo();
 })
-// Importa la lista de usuarios simulados desde datos.js
-import { usuarios } from './datos.js';
-import { obtenerUsuarioActivo } from './almacenaje.js';
-import { loguearUsuario } from './almacenaje.js';
+// Importa funciones de localStorage desde almacenaje.js
+import { obtenerUsuarioActivo, loguearUsuario, obtenerUsuarioPorEmail } from './almacenaje.js';
 
-// Índice por nombre de usuario para búsqueda O(1)
-const usuariosByName = new Map(usuarios.map(u => [u.email, u]));
 
 // Referencias a elementos del DOM usados por el formulario de login
 const formLogin = document.getElementById("login_form");
@@ -38,7 +34,8 @@ function LoginUser(event){
         return;
     }
 
-    const foundUser = usuariosByName.get(inputUser);
+    // Busca al usuario en localStorage
+    const foundUser = obtenerUsuarioPorEmail(inputUser);
     if(!foundUser){
         alert("El usuario no existe");
         return;
