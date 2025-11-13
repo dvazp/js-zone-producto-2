@@ -1,5 +1,5 @@
 //Importamos las funciones de almacenaje
-import { obtenerUsuarioActivo, initDB, db, STORE_NAME } from './almacenaje.js';
+import { obtenerUsuarioActivo, obtenerUsuarios, agregarUsuario, borrarUsuario } from './almacenaje.js';
 
 const userHeader = document.getElementById("user_header");
 
@@ -14,58 +14,48 @@ function mostrarUsuarioActivo() {
 }
 
 // Funciones de mostrar y borrar los usuarios
-async function listaUsuarios() {
+function listaUsuarios() {
     const consultaUser_form = document.getElementById("consultaUser_form");
     consultaUser_form.innerHTML = '';
 
-    const transaction = db.transaction(STORE_NAME, 'readonly');
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.getAll();
+    const usuarios = obtenerUsuarios();
+    usuarios.forEach(u => {
+        let contorno = document.createElement("div");
+        contorno.classList.add('user-card');
+        let divUsuario = document.createElement("div");
 
-    request.onsuccess = () => {
-        const usuarios = request.result;
-        usuarios.forEach(u => {
-            let contorno = document.createElement("div");
-            contorno.classList.add('user-card');
-            let divUsuario = document.createElement("div");
+        let nombre = document.createElement("p");
+        let email = document.createElement("p");
+        let password = document.createElement("p");
+        let acciones = document.createElement("button");
 
-            let nombre = document.createElement("p");
-            let email = document.createElement("p");
-            let password = document.createElement("p");
-            let acciones = document.createElement("button");
+        nombre.innerHTML = `Nombre: ${u.nombre}`;
+        email.innerHTML = `Email: ${u.email}`;
+        password.innerHTML = `Contraseña: ${u.password}`;
+        acciones.innerHTML = `Borrar`;
+        acciones.setAttribute('id', u.email);
+        acciones.setAttribute('class', 'delButton btn btn-success px-4')
+        acciones.setAttribute('type', 'button');
 
-            nombre.innerHTML = `Nombre: ${u.nombre}`;
-            email.innerHTML = `Email: ${u.email}`;
-            password.innerHTML = `Contraseña: ${u.password}`;
-            acciones.innerHTML = `Borrar`;
-            acciones.setAttribute('id', u.email);
-            acciones.setAttribute('class', 'delButton btn btn-success px-4')
-            acciones.setAttribute('type', 'button');
+        divUsuario.appendChild(nombre);
+        divUsuario.appendChild(email);
+        divUsuario.appendChild(password);
+        divUsuario.appendChild(acciones);
 
-            divUsuario.appendChild(nombre);
-            divUsuario.appendChild(email);
-            divUsuario.appendChild(password);
-            divUsuario.appendChild(acciones);
-
-            [nombre, email, password, acciones].forEach(child => {
-                child.classList.add("textoNormal");
-            });
-
-            contorno.appendChild(divUsuario);
-            consultaUser_form.appendChild(contorno);
+        [nombre, email, password, acciones].forEach(child => {
+            child.classList.add("textoNormal");
         });
 
-        const delBtns = document.getElementsByClassName('delButton');
-        for (const btn of delBtns) {
-            btn.addEventListener('click', function() {
-                removeUsuario(this.id); 
-            });
-        }
-    };
+        contorno.appendChild(divUsuario);
+        consultaUser_form.appendChild(contorno);
+    });
 
-    request.onerror = () => {
-        console.error("Error al cargar usuarios:", request.error);
-    };
+    const delBtns = document.getElementsByClassName('delButton');
+    for (const btn of delBtns) {
+        btn.addEventListener('click', function() {
+            removeUsuario(this.id); 
+        });
+    }
 }
 
 function getFieldValue(id, promptText) {
@@ -76,7 +66,7 @@ function getFieldValue(id, promptText) {
 }
 
 // Añadir usuario
-async function addUsuario() {
+function addUsuario() {
     const nombre = getFieldValue('nombre');
     const email = getFieldValue('email');
     const password = getFieldValue('password');
@@ -88,54 +78,33 @@ async function addUsuario() {
 
     const usuario = { nombre, email, password };
 
-    // Nos aseguramos que la DBse inicialicie para evitar errores
-    if (!db) await initDB();
-
-    const transaction = db.transaction(STORE_NAME, 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-
     try {
-        await new Promise((resolve, reject) => {
-            const request = store.put(usuario);
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error);
-        });
+        agregarUsuario(usuario);
 
         ['nombre', 'email', 'password'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.value = '';
         });
 
-        await listaUsuarios();
+        listaUsuarios();
     } catch (error) {
         console.error('Error adding user:', error);
-        if (error.name === 'ConstraintError') {
-            window.alert('Ya existe un usuario con este email.');
-        }
+        window.alert(error.message);
     }
 }
 
-async function removeUsuario(email) {
-    const transaction = db.transaction(STORE_NAME, 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-
+function removeUsuario(email) {
     try {
-        await new Promise((resolve, reject) => {
-            const request = store.delete(email);
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error);
-        });
-
-        await listaUsuarios();
+        borrarUsuario(email);
+        listaUsuarios();
     } catch (error) {
         console.error('Error removing user:', error);
     }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     try {
-        await initDB();
-        await listaUsuarios();
+        listaUsuarios();
         mostrarUsuarioActivo();
 
         const addBtn = document.getElementById('addUser_button');

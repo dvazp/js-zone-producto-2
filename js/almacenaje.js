@@ -1,35 +1,45 @@
-//Para las operaciones CRUD comunes en todas las paginas
-
-export function obtenerUsuarioActivo() { // Obtiene el Usuario Activo y lo Devuelve.
+// Funcion que obtiene el usuario activo del localStorage.
+export function obtenerUsuarioActivo() {
     const usuarioActivo = localStorage.getItem("UsuarioActivo");
     return usuarioActivo;
 }
-// IndexedDB de usuarios
-export let db;
-export const DB_NAME = 'UsersDB';
-export const DB_VERSION = 1;
-export const STORE_NAME = 'users';
-
-export const initDB = () => {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => {
-            db = request.result;
-            resolve(db);
-        };
-        request.onupgradeneeded = (event) => {
-            const dbInst = event.target.result;
-            if (!dbInst.objectStoreNames.contains(STORE_NAME)) {
-                const store = dbInst.createObjectStore(STORE_NAME, { keyPath: 'email' });
-                store.createIndex('nombre', 'nombre', { unique: false });
-            }
-        };
-    });
-};
 
 // Funcion que guarda el usuario logueado como usuario activo.
 export function loguearUsuario(usuario) {
     localStorage.setItem("UsuarioActivo", usuario);
+}
+
+// CRUD de localStorage para usuarios
+const USERS_KEY = 'AppUsers';
+
+export function obtenerUsuarios() {
+    const stored = localStorage.getItem(USERS_KEY);
+    return stored ? JSON.parse(stored) : [];
+}
+
+export function guardarUsuarios(usuarios) {
+    localStorage.setItem(USERS_KEY, JSON.stringify(usuarios));
+}
+
+export function obtenerUsuarioPorEmail(email) {
+    const usuarios = obtenerUsuarios();
+    return usuarios.find(u => u.email === email) || null;
+}
+
+export function agregarUsuario(usuario) {
+    const usuarios = obtenerUsuarios();
+    if (obtenerUsuarioPorEmail(usuario.email)) {
+        throw new Error('Ya existe un usuario con este email.');
+    }
+    usuarios.push(usuario);
+    guardarUsuarios(usuarios);
+}
+
+export function borrarUsuario(email) {
+    const usuarios = obtenerUsuarios();
+    const index = usuarios.findIndex(u => u.email === email);
+    if (index > -1) {
+        usuarios.splice(index, 1);
+        guardarUsuarios(usuarios);
+    }
 }
