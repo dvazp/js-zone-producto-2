@@ -45,10 +45,14 @@ function LoginUser(event){
         alert("La contraseña no coincide");
         return;
     }
-
+    
     // Credenciales correctas
     alert("Inicio de sesión correcto");
     loguearUsuario(correo.value)
+    mostrarUsuarioActivo();
+    // Borramos los valores del input para que quede correcto.
+    correo.value = "";
+    password.value = "";
 }
 
 // Funcion que MuestraUsuarioActivo
