@@ -1,4 +1,4 @@
-let usuarios = [
+let usuariosBase = [
     {
         user: "Mario",
         password: "Mario",
@@ -32,4 +32,4 @@ let voluntariados = [
     }
 ]
 
-export { usuarios, voluntariados };
+export { usuariosBase, voluntariados };

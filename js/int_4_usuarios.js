@@ -93,6 +93,7 @@ function addUsuario() {
     }
 }
 
+// Borrar usuario
 function removeUsuario(email) {
     try {
         borrarUsuario(email);
