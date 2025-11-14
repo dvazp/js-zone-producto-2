@@ -48,3 +48,15 @@
     background-color: var(--bs-primary-dark);
     transform: translateY(-1px);
 }
+
+.card-header h5 {
+    font-weight: 700;
+}
+
+.card {
+    border-radius: 8px;
+}
+
+.form-label {
+    font-weight: 600;
+}

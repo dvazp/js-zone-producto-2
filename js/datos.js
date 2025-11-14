@@ -8,28 +8,31 @@ let usuariosBase = [
     }
 ]
 
-let voluntariados = [
+let voluntariadosBase = [
     {
         titulo : "Se necesita una persona para cuidar de un gato",
         usuario : "Alejandra",
         fecha : "16-10-2025",
         descripcion : "Se busca una persona para cuidar de un gato de 3 meses.",
-        tipo : "Oferta"
+        tipo : "Oferta",
+        id: 1
     },
     {
         titulo : "Se necesita una persona para cuidar de un gato",
         usuario : "Alejandra",
         fecha : "16-10-2025",
         descripcion : "Se busca una persona para cuidar de un gato de 3 meses.",
-        tipo : "Oferta"
+        tipo : "Oferta",
+        id: 2
     },
     {
         titulo : "Se ofrece persona para cuidar de un gato",
         usuario : "Alejandra",
         fecha : "16-10-2025",
         descripcion : "Se busca una persona para cuidar de un gato de 3 meses.",
-        tipo : "Peticion"
+        tipo : "Peticion",
+        id: 3
     }
 ]
 
-export { usuariosBase, voluntariados };
+export { usuariosBase, voluntariadosBase };

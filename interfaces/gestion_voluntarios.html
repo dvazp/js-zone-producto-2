@@ -26,7 +26,7 @@
                     <li class="nav-item"><a class="nav-link" href="gestion_usuarios.html">Gestión de Usuarios</a></li>
                     <li class="nav-item"><a class="nav-link" href="gestion_voluntarios..html">Gestión de Voluntarios</a>
                     </li>
-                    <li class="nav-item ms-lg-auto"><a class="nav-link" id="user_header" href="#">No Login</a></li>
+                    <li class="nav-item ms-lg-auto"><a class="nav-link" id="user_header" href="#">-no login-</a></li>
                 </ul>
             </div>
         </div>
@@ -38,44 +38,46 @@
         <div class="row g-4">
             <div class="col-lg-6">
                 <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h3 class="card-title mb-4">Alta de Voluntariado</h3>
-                        <form id="addVoluntariado_form">
-                            <div class="mb-3">
-                                <label for="titulo" class="form-label">Título</label>
-                                <input type="text" class="form-control" id="titulo" name="titulo" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="usuario" class="form-label">Usuario</label>
-                                <input type="text" class="form-control" id="usuario" name="usuario" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="fecha" class="form-label">Fecha</label>
-                                <input type="date" class="form-control" id="fecha" name="fecha" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="descripcion" class="form-label">Descripción</label>
-                                <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
-                                    required></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="tipo" class="form-label">Tipo</label>
-                                <select class="form-select" id="tipo" name="tipo" required>
-                                    <option value="Oferta">Oferta</option>
-                                    <option value="Peticion">Petición</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100"
-                                id="addVoluntariado_button">Añadir</button>
-                        </form>
+                    <div class="card-header bg-success text-white text-center">
+                        <h5 class="mb-0">Alta de Usuarios</h5>
                     </div>
+                    <form id="addVoluntariado_form" class="card-body">
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="usuario" name="usuario" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
+                                required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label">Tipo</label>
+                            <select class="form-select" id="tipo" name="tipo" required>
+                                <option value="Oferta">Oferta</option>
+                                <option value="Peticion">Petición</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100"
+                            id="addVoluntariado_button">Añadir</button>
+                    </form>
                 </div>
             </div>
 
             <div class="col-lg-6">
                 <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white text-center">
+                        <h5 class="mb-0">Consulta y Borrado</h5>
+                    </div>
                     <div class="card-body">
-                        <h3 class="card-title mb-4">Consulta y Borrado</h3>
                         <form id="consultaVoluntariado_form">
                             <div id="lista" class="list-group">
                                 <!-- Aquí se mostrarán los voluntariados -->
