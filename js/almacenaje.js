@@ -16,20 +16,13 @@ const USERS_KEY = 'AppUsers';
 
 export function obtenerUsuarios() {
     const storedData = localStorage.getItem(USERS_KEY);
-    let storedUsers = storedData ? JSON.parse(storedData) : [];
-    const uniqueUsersMap = new Map();
 
-    usuariosBase.forEach(user => {
-        uniqueUsersMap.set(user.email, user);
-    });
-    storedUsers.forEach(user => {
-        uniqueUsersMap.set(user.email, user);
-    });
+    if (!storedData) {
+        guardarUsuarios(usuariosBase);
+        return usuariosBase;
+    }
 
-    const combinedUsers = Array.from(uniqueUsersMap.values());
-    guardarUsuarios(combinedUsers);
-
-    return combinedUsers;
+    return JSON.parse(storedData);
 }
 
 export function guardarUsuarios(usuarios) {
