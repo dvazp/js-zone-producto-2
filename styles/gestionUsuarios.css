@@ -51,12 +51,12 @@ body{
 }
 
 .user-card p{
-    margin: 0;
-    color: #333;
+    margin-bottom: 0.5rem;
+    color: var(--bs-gray-700);
 }
 
-.textoNormal{
-    margin-bottom: 6px;
+.user-card:hover {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
 }
 
 /* Make the user list scroll if many users */
