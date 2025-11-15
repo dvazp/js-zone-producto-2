@@ -11,14 +11,15 @@
     font-weight: 700;
 }
 
+/* Navbar */
 .navbar .nav-link {
-    color: black;
+    color: var(--bs-dark);
     font-family: "Roboto", sans-serif;
     font-weight: 600;
-    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
-.navbar .nav-link:hover{
-    text-decoration: underline;
-    opacity: 60%;
+.navbar .nav-link:hover {
+    color: var(--bs-primary);
+    opacity: 0.8;
 }
