@@ -52,37 +52,115 @@ export function borrarUsuario(email) {
     }
 }
 
-// CRUD de localStorage para los voluntariados
-const VOLUNT_KEY = 'appVolunt';
+// DB para los voluntariados
 
-export function obtenerVoluntariados() {
-    const almacenaje = localStorage.getItem(VOLUNT_KEY);
-    
-    if (!almacenaje) {
-        guardarVoluntariados(voluntariadosBase);
-        return voluntariadosBase;
+const DB_NAME = 'VoluntariadosDB';
+const STORE_NAME = 'voluntariados';
+const DB_VERSION = 1;
+
+let dbPromise = null;
+
+function initDB() {
+    // evita,mos abrir la DB varias veces
+    if (dbPromise) {
+        return dbPromise;
     }
 
-    return JSON.parse(almacenaje);
+    dbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onerror = (event) => {
+            console.error('Error al abrir la base de datos IndexedDB:', event.target.error);
+            reject('Error de IndexedDB: ' + event.target.error);
+        };
+
+        request.onsuccess = (event) => {
+            const db = event.target.result;
+            resolve(db);
+        };
+
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                const objectStore = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+
+                objectStore.createIndex('tipo', 'tipo', { unique: false });
+                objectStore.createIndex('usuario', 'usuario', { unique: false });
+
+                console.log('Creando almacén y plantando datos iniciales...');
+                voluntariadosBase.forEach(voluntariado => {
+                    objectStore.add(voluntariado);
+                });
+            }
+        };
+    });
+
+    return dbPromise;
 }
 
-export function guardarVoluntariados(voluntariados) {
-    localStorage.setItem(VOLUNT_KEY, JSON.stringify(voluntariados));
+export async function obtenerVoluntariados() {
+    const db = await initDB();
+
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], 'readonly');
+        const objectStore = transaction.objectStore(STORE_NAME);
+
+        const request = objectStore.getAll();
+
+        request.onerror = (event) => {
+            console.error('Error al obtener voluntariados:', event.target.error);
+            reject('Error al leer de la BD: ' + event.target.error); // Fallo
+        };
+
+        request.onsuccess = (event) => {
+            resolve(event.target.result); //Jiji acierto
+        };
+    });
 }
 
-export function agregarVoluntariado(voluntariado) {
-    const voluntariados = obtenerVoluntariados();
-    voluntariados.push(voluntariado);
-    guardarVoluntariados(voluntariados);
+export async function agregarVoluntariado(voluntariado) {
+    const db = await initDB();
+
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const objectStore = transaction.objectStore(STORE_NAME);
+
+        if (!voluntariado.id) {
+            voluntariado.id = new Date().getTime();
+        }
+
+        const request = objectStore.add(voluntariado);
+
+        request.onerror = (event) => {
+            console.error('Error al agregar voluntariado:', event.target.error);
+            reject('Error al escribir en la BD: ' + event.target.error); // Jiji ha fallado
+        };
+
+        request.onsuccess = (event) => {
+            resolve(); // Jiji ha funcionado
+        };
+    });
 }
 
-export function borrarVoluntariado(id) {
-    const voluntariados = obtenerVoluntariados();
-    const idNumerico = Number(id); 
-    const index = voluntariados.findIndex(v => v.id === idNumerico);
+export async function borrarVoluntariado(id) {
+    const db = await initDB();
 
-    if (index > -1) {
-        voluntariados.splice(index, 1);
-        guardarVoluntariados(voluntariados);
-    }
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const objectStore = transaction.objectStore(STORE_NAME);
+
+        const idNumerico = Number(id);
+
+        const request = objectStore.delete(idNumerico);
+
+        request.onerror = (event) => {
+            console.error('Error al borrar voluntariado:', event.target.error);
+            reject('Error al borrar de la BD: ' + event.target.error); // Jiji ha fallado otra vez
+        };
+
+        request.onsuccess = (event) => {
+            resolve(); // Jiji esto tambiém ha funcionado
+        };
+    });
 }

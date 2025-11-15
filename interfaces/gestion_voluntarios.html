@@ -7,7 +7,7 @@
     <title>Login</title>
     <link rel="stylesheet" href="../styles/gestionVoluntariados.css">
     <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script type="module" src="../js/gestionVoluntariados.js"></script>
+    <script type="module" src="../js/int_3_voluntariados.js"></script>
     <script type="module" src="../js/login.js"></script>
 </head>
 
@@ -63,12 +63,23 @@
                             <label for="tipo" class="form-label">Tipo</label>
                             <select class="form-select" id="tipo" name="tipo" required>
                                 <option value="Oferta">Oferta</option>
-                                <option value="Peticion">Petición</option>
+                                <option value="Petición">Petición</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100"
+                        <button type="submit" class="btn btn-success w-100"
                             id="addVoluntariado_button">Añadir</button>
                     </form>
+                </div>
+                <div class="chart-container my-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-success text-white text-center" style="width: 100%;">
+                            <h5>Gráfico de Voluntariados</h1>
+                        </div>
+                        <!-- canvas -->
+                        <div class="canvas-wrapper">
+                            <canvas id="voluntariadoCanvas" style="width: 100%;"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
 
