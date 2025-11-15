@@ -38,10 +38,12 @@ body{
 }
 
 .user-card {
-    border: 1px solid #e1e6ef;
-    padding: 12px;
-    border-radius: 6px;
-    background-color: #fff;
+    background-color: var(--bs-white);
+    border: 1px solid var(--bs-gray-200);
+    border-radius: var(--bs-border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
 }
 
 .user-card + .user-card {
@@ -72,7 +74,7 @@ body{
 form { margin: 0; }
 
 /* Botón de eliminar */
-.delBtn {
+.delete-btn {
     background-color: red;
     color: var(--bs-white);
     border: none;

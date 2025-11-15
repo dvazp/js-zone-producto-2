@@ -32,9 +32,9 @@ function listaUsuarios() {
         nombre.innerHTML = `Nombre: ${u.nombre}`;
         email.innerHTML = `Email: ${u.email}`;
         password.innerHTML = `Contraseña: ${u.password}`;
-        acciones.innerHTML = `Borrar`;
+        acciones.innerHTML = `Eliminar`;
         acciones.setAttribute('id', u.email);
-        acciones.setAttribute('class', 'delButton btn btn-success px-4')
+        acciones.setAttribute('class', 'delete-btn delButton');
         acciones.setAttribute('type', 'button');
 
         divUsuario.appendChild(nombre);
