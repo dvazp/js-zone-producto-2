@@ -7,7 +7,7 @@
   <title>Dashboard</title>
   <link rel="stylesheet" href="../styles/dashboard.css">
   <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script type="module" src="../js/voluntarios.js" defer></script>
+  <script type="module" src="../js/int_1_dashboard.js" defer></script>
   <script type="module" src="../js/login.js"></script>
 </head>
 
@@ -41,7 +41,31 @@
     <div class="d-flex justify-content-center background-offers w-25 rounded mt-5">
       <h2 class="mt-2">Ofertas</h2>
     </div>
-    <div id="ofertas" class="row justify-content-center mt-3 p-4">
+    <div id="ofertas" class="d-flex flex-row gap-3 justify-content-center mt-3 p-4">
+      <div class="card shadow-sm px-0 m-0 border-0 w-50">
+          <div class="card-header bg-success text-white text-center" style="width: 100%;">
+              <h5>Voluntariados disponibles</h1>
+          </div>
+          <div class="card-body">
+              <form id="consultaVoluntariado_form">
+                  <div id="lista" class="list-group">
+                      <!-- Aquí se mostrarán los voluntariados -->
+                  </div>
+              </form>
+          </div>
+      </div>
+      <div class="card shadow-sm px-0 m-0 border-0 w-50">
+          <div class="card-header bg-success text-white text-center" style="width: 100%;">
+              <h5>Voluntariados seleccionados</h1>
+          </div>
+          <div class="card-body p-0">
+              <form id="consultaVoluntariado_form" class="destino">
+                  <div id="contenedor-seleccion" class="destino-zona">
+                      <div class="w-100"></div>
+                  </div>
+              </form>
+          </div>
+      </div>
     </div>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
