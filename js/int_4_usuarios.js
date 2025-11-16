@@ -18,8 +18,10 @@ function listaUsuarios() {
     const consultaUser_form = document.getElementById("consultaUser_form");
     consultaUser_form.innerHTML = '';
 
+    console.log('Cargando usuarios desde localStorage...');
     const usuarios = obtenerUsuarios();
     usuarios.forEach(u => {
+        console.log('Usuario encontrado:', u);
         let contorno = document.createElement("div");
         contorno.classList.add('user-card');
         let divUsuario = document.createElement("div");

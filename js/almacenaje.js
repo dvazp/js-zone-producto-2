@@ -19,9 +19,11 @@ export function obtenerUsuarios() {
 
     if (!storedData) {
         guardarUsuarios(usuariosBase);
+        console.log('Usuarios iniciales plantados en localStorage.');
         return usuariosBase;
     }
 
+    console.log('Usuarios cargados desde localStorage:', storedData);
     return JSON.parse(storedData);
 }
 
