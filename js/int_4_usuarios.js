@@ -31,9 +31,9 @@ function listaUsuarios() {
         let password = document.createElement("p");
         let acciones = document.createElement("button");
 
-        nombre.innerHTML = `Nombre: ${u.nombre}`;
-        email.innerHTML = `Email: ${u.email}`;
-        password.innerHTML = `Contraseña: ${u.password}`;
+        nombre.innerHTML = `<strong>Nombre:</strong> ${u.nombre}`;
+        email.innerHTML = `<strong>Email:</strong> ${u.email}`;
+        password.innerHTML = `<strong>Contraseña:</strong> ${u.password}`;
         acciones.innerHTML = `Eliminar`;
         acciones.setAttribute('id', u.email);
         acciones.setAttribute('class', 'delete-btn delButton');
