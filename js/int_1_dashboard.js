@@ -12,11 +12,19 @@ function mostrarUsuarioActivo() {
 }
 
 //Funcion para mostrar los voluntariados en el div "lista"
-async function displayVoluntariados() {
+async function displayVoluntariados(filter = 'all') {
     const listaDiv = document.getElementById("lista");
     listaDiv.innerHTML = '';
 
     let voluntariados = await obtenerVoluntariados();
+
+    if (filter === 'mine') {
+        const usuarioActivo = obtenerUsuarioActivo();
+        if (usuarioActivo) {
+            voluntariados = voluntariados.filter(v => v.usuario === usuarioActivo);
+        }
+    }
+
     voluntariados.forEach((voluntariado) => {
         let divVoluntario = document.createElement("div");
         listaDiv.appendChild(divVoluntario);
@@ -81,6 +89,12 @@ async function displayVoluntariados() {
 document.addEventListener('DOMContentLoaded', () => {
     mostrarUsuarioActivo();
     displayVoluntariados();
+
+    const todasBtn = document.getElementById('Todas');
+    const miasBtn = document.getElementById('Mias');
+
+    todasBtn.addEventListener('click', () => displayVoluntariados('all'));
+    miasBtn.addEventListener('click', () => displayVoluntariados('mine'));
 
     const destino = document.getElementById('contenedor-seleccion');
     destino.addEventListener('dragover', (e) => {
