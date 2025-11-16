@@ -159,7 +159,7 @@ function cargarCanvas(voluntariados) {
         }
     }
 
-    const colores = ['#138856', '#ff0c0d'];
+    const colores = ['#138856', '#0509fcff'];
     let xActual = padding + (espacioBarra / 2);
 
     datosGrafico.forEach((dato, index) => {

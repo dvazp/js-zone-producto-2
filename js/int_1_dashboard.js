@@ -1,4 +1,4 @@
-import { obtenerUsuarioActivo, obtenerVoluntariados, agregarVoluntariado, borrarVoluntariado } from './almacenaje.js';
+import { obtenerUsuarioActivo, obtenerVoluntariados } from './almacenaje.js';
 
 // Primero mostramos el usuario activo
 function mostrarUsuarioActivo() {
@@ -20,7 +20,13 @@ async function displayVoluntariados() {
     voluntariados.forEach((voluntariado) => {
         let divVoluntario = document.createElement("div");
         listaDiv.appendChild(divVoluntario);
-        divVoluntario.classList.add("grab", "card", "col-12", "mb-3", "col-lg-3", "rounded" ,"p-5", "bg-success", "d-flex","align-items-start","efectoCard","mx-2","mx-3");
+
+        // Revisamos el tipo para ver si es peticion o oferta y aplicamos el color de fondo
+        const bgColor = voluntariado.tipo === 'Petición' ? 'bg-primary' : 'bg-success';
+
+        divVoluntario.classList.add("grab", "card", "col-12", "mb-3", "col-lg-3", "rounded" ,"p-5", bgColor, "d-flex","align-items-start","efectoCard","mx-2","mx-3");
+
+
         divVoluntario.style.width = "auto";
         divVoluntario.id = `voluntariado-${voluntariado.id}`;
 
@@ -60,13 +66,7 @@ async function displayVoluntariados() {
         fecha.classList.add("fecha");
         descripcion.classList.add("textoNormal");
         usuario.classList.add("textoNormal");
-
-        // Revisamos el tipo para ver si es peticion o oferta
-        let tipo = voluntariado.tipo;
-        if(tipo == "Peticion"){
-            divVoluntario.classList.add("peticion");
-            divVoluntario.classList.remove("bg-success") 
-        }
+        
     });
 
     //Añadir funcionalidad a los botones de eliminar
