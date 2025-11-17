@@ -60,3 +60,13 @@
 .form-label {
     font-weight: 600;
 }
+
+button.btn:disabled,
+button[disabled] {
+    cursor: not-allowed;
+}
+
+/* Para etiquetas <a> que tienen la clase .disabled */
+a.btn.disabled {
+    cursor: not-allowed;
+}

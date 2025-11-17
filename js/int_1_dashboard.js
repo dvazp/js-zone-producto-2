@@ -6,8 +6,10 @@ function mostrarUsuarioActivo() {
     let usuarioActivo = obtenerUsuarioActivo();
     if (!usuarioActivo) {
         userHeader.textContent = "-no login-";
+        return false;
     } else {
         userHeader.textContent = usuarioActivo;
+        return true;
     }
 }
 
@@ -82,14 +84,19 @@ async function displayVoluntariados(filter = 'all') {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    mostrarUsuarioActivo();
+    const login = mostrarUsuarioActivo();
     displayVoluntariados();
 
     const todasBtn = document.getElementById('Todas');
     const miasBtn = document.getElementById('Mias');
 
-    todasBtn.addEventListener('click', () => displayVoluntariados('all'));
-    miasBtn.addEventListener('click', () => displayVoluntariados('mine'));
+    if (login){
+        todasBtn.addEventListener('click', () => displayVoluntariados('all'));
+        miasBtn.addEventListener('click', () => displayVoluntariados('mine'));
+    } else {
+        miasBtn.style.display = 'none';
+        todasBtn.addEventListener('click', () => displayVoluntariados('all'));
+    }
 
     const destino = document.getElementById('contenedor-seleccion');
     const origen = document.getElementById('lista');

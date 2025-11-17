@@ -7,8 +7,10 @@ function mostrarUsuarioActivo() {
     let usuarioActivo = obtenerUsuarioActivo();
     if (!usuarioActivo) {
         userHeader.textContent = "-no login-";
+        return false;
     } else {
         userHeader.textContent = usuarioActivo;
+        return true;
     }
 }
 
@@ -182,9 +184,17 @@ function cargarCanvas(voluntariados) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    mostrarUsuarioActivo();
+    const login = mostrarUsuarioActivo();
     displayVoluntariados();
 
     const addBtn = document.getElementById('addVoluntariado_button');
-    if (addBtn) addBtn.addEventListener('click', addVoluntariado);
+    const alertaInicio = document.getElementById('alerta-inicio');
+
+    if (login) {
+        alertaInicio.style.display = 'none';
+        if (addBtn) addBtn.addEventListener('click', addVoluntariado);
+    } else {
+        addBtn.classList.remove('btn-primary');
+        addBtn.classList.add('btn-danger', 'disabled');
+    }
 });
