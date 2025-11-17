@@ -25,7 +25,7 @@ async function displayVoluntariados(filter = 'all') {
     if (filter === 'mine') {
         const usuarioActivo = obtenerUsuarioActivo();
         if (usuarioActivo) {
-            voluntariados = voluntariados.filter(v => v.usuario === usuarioActivo);
+            voluntariados = voluntariados.filter(v => v.email === usuarioActivo);
         }
     }
 

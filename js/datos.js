@@ -15,6 +15,7 @@ let voluntariadosBase = [
         fecha : "16-10-2025",
         descripcion : "Se busca una persona para cuidar de un gato de 3 meses.",
         tipo : "Oferta",
+        email: "alejandra@mail.com",
         id: 1
     },
     {
@@ -23,6 +24,7 @@ let voluntariadosBase = [
         fecha : "16-10-2025",
         descripcion : "Se busca una persona para cuidar de un gato de 3 meses.",
         tipo : "Oferta",
+        email: "alejandra@mail.com",
         id: 2
     },
     {
@@ -31,6 +33,7 @@ let voluntariadosBase = [
         fecha : "16-10-2025",
         descripcion : "Se busca una persona para cuidar de un gato de 3 meses.",
         tipo : "Petición",
+        email: "alejandra@mail.com",
         id: 3
     }
 ]

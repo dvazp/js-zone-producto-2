@@ -60,6 +60,7 @@ async function addVoluntariado() {
     const fecha = getFieldValue('fecha', 'Fecha (ej. 16-10-2025):');
     const descripcion = getFieldValue('descripcion', 'Descripción:');
     const tipo = getFieldValue('tipo', 'Tipo:');
+    const email = obtenerUsuarioActivo(); // Obtener el email del usuario activo
     const id = new Date().getTime(); // Esto genera un ID único basado en la marca de tiempo, muy dificilmente se generarán ids repetidos
 
     if (titulo == "" || usuario == "" || fecha == "" || descripcion == "" || tipo == "") {
@@ -67,7 +68,7 @@ async function addVoluntariado() {
         return;
     }
 
-    const nuevo = { titulo, usuario, fecha, descripcion, tipo, id };
+    const nuevo = { titulo, usuario, fecha, descripcion, tipo, email, id };
 
     try {
         await agregarVoluntariado(nuevo);
@@ -187,5 +188,3 @@ document.addEventListener('DOMContentLoaded', () => {
     const addBtn = document.getElementById('addVoluntariado_button');
     if (addBtn) addBtn.addEventListener('click', addVoluntariado);
 });
-
-
