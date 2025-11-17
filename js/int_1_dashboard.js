@@ -1,115 +1,209 @@
-import { obtenerUsuarioActivo, obtenerVoluntariados } from './almacenaje.js';
-
-// Primero mostramos el usuario activo
-function mostrarUsuarioActivo() {
-    const userHeader = document.getElementById("user_header");
-    let usuarioActivo = obtenerUsuarioActivo();
-    if (!usuarioActivo) {
-        userHeader.textContent = "-no login-";
-    } else {
-        userHeader.textContent = usuarioActivo;
-    }
-}
-
-//Funcion para mostrar los voluntariados en el div "lista"
-async function displayVoluntariados(filter = 'all') {
-    const listaDiv = document.getElementById("lista");
-    listaDiv.innerHTML = '';
-
-    let voluntariados = await obtenerVoluntariados();
-
-    if (filter === 'mine') {
-        const usuarioActivo = obtenerUsuarioActivo();
-        if (usuarioActivo) {
-            voluntariados = voluntariados.filter(v => v.usuario === usuarioActivo);
-        }
-    }
-
-    voluntariados.forEach((voluntariado) => {
-        let divVoluntario = document.createElement("div");
-        listaDiv.appendChild(divVoluntario);
-
-        // Revisamos el tipo para ver si es peticion o oferta y aplicamos el color de fondo
-        const bgColor = voluntariado.tipo === 'Petición' ? 'bg-primary' : 'bg-success';
-
-        divVoluntario.classList.add("grab", "card", "col-12", "mb-3", "col-lg-3", "rounded" ,"p-5", bgColor, "d-flex","align-items-start","efectoCard","mx-2","mx-3");
-
-
-        divVoluntario.style.width = "auto";
-        divVoluntario.id = `voluntariado-${voluntariado.id}`;
-
-        // Arrastrable
-        divVoluntario.draggable = true;
-        divVoluntario.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text/plain', e.target.id);
-
-            setTimeout(() => {
-                e.target.style.opacity = '0.5';
-            }, 0);
-        });
-
-        divVoluntario.addEventListener('dragend', (e) => {
-            e.target.style.opacity = '1';
-        });
-
-        // Creamos los datos de los voluntarios
-        let titulo = document.createElement("p");
-        let usuario = document.createElement("p");
-        let fecha = document.createElement("p");
-        let descripcion = document.createElement("p");
-
-        // Los añadimos al html
-        divVoluntario.appendChild(titulo);
-        divVoluntario.appendChild(fecha);
-        divVoluntario.appendChild(descripcion);
-        divVoluntario.appendChild(usuario);
-
-        // Le añadimos el contenido
-        titulo.innerHTML = voluntariado.titulo;
-        usuario.innerHTML = `Publicado por : ${voluntariado.usuario}`;
-        fecha.innerHTML =  `Fecha : ${voluntariado.fecha}`;
-        descripcion.innerHTML = voluntariado.descripcion;
-
-        titulo.classList.add("textoNormal");
-        fecha.classList.add("fecha");
-        descripcion.classList.add("textoNormal");
-        usuario.classList.add("textoNormal");
-        
-    });
-
-    //Añadir funcionalidad a los botones de eliminar
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const id = e.target.dataset.id;
-            eliminarVoluntariado(id);
-        });
-    });
-}
+import { voluntariados as voluntariadosFuente } from './datos.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    mostrarUsuarioActivo();
-    displayVoluntariados();
+  console.log("Dashboard cargado correctamente");
 
-    const todasBtn = document.getElementById('Todas');
-    const miasBtn = document.getElementById('Mias');
+  const usuarioActivoSpan = document.getElementById('usuarioActivo');
+  const usuarioLogueado = localStorage.getItem('usuarioActivo') || '';
 
-    todasBtn.addEventListener('click', () => displayVoluntariados('all'));
-    miasBtn.addEventListener('click', () => displayVoluntariados('mine'));
+  if (usuarioLogueado && usuarioActivoSpan) {
+    usuarioActivoSpan.textContent = usuarioLogueado;
+  } else if (usuarioActivoSpan) {
+    usuarioActivoSpan.textContent = '-no login-';
+  }
 
-    const destino = document.getElementById('contenedor-seleccion');
-    destino.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        destino.classList.add('drag-over');
+  const voluntariadosDashboard = voluntariadosFuente.map((v, index) => {
+    let tipoNormalizado = 'oferta';
+    const tipoLower = (v.tipo || '').toLowerCase();
+    if (tipoLower.includes('pet')) {
+      tipoNormalizado = 'peticion';
+    }
+
+    return {
+      id: index + 1,                 
+      titulo: v.titulo,
+      descripcion: v.descripcion,
+      fecha: v.fecha,
+      tipo: tipoNormalizado,         
+      autor: v.usuario || '',        
+      esPropio: usuarioLogueado && v.usuario === usuarioLogueado
+    };
+  });
+
+  const seleccionados = [];
+
+  const CLAVE_SELECCION = usuarioLogueado
+    ? `seleccionDashboard_${usuarioLogueado}`
+    : 'seleccionDashboard_anonimo';
+
+  function guardarSeleccionEnStorage() {
+    try {
+      const ids = seleccionados.map(v => v.id);
+      localStorage.setItem(CLAVE_SELECCION, JSON.stringify(ids));
+    } catch (e) {
+      console.warn('No se ha podido guardar la selección en localStorage', e);
+    }
+  }
+
+  function cargarSeleccionDesdeStorage() {
+    try {
+      const texto = localStorage.getItem(CLAVE_SELECCION);
+      if (!texto) return [];
+      const ids = JSON.parse(texto);
+      if (!Array.isArray(ids)) return [];
+      return ids;
+    } catch (e) {
+      console.warn('No se ha podido leer la selección de localStorage', e);
+      return [];
+    }
+  }
+
+  const listaVoluntariadosDiv = document.getElementById('listaVoluntariados');
+  const zonaSeleccionDiv = document.getElementById('zonaSeleccion');
+  const mensajeSeleccionVacia = document.getElementById('mensajeSeleccionVacia');
+  const btnFiltroOtros = document.getElementById('btnFiltroOtros');
+  const btnFiltroPropios = document.getElementById('btnFiltroPropios');
+
+  console.log({
+    usuarioActivoSpan,
+    listaVoluntariadosDiv,
+    zonaSeleccionDiv,
+    mensajeSeleccionVacia,
+    btnFiltroOtros,
+    btnFiltroPropios
+  });
+
+  function crearTarjetaVoluntariado(vol) {
+    const tarjeta = document.createElement('article');
+    tarjeta.classList.add('tarjeta-voluntariado', 'efectoCard');
+    tarjeta.classList.add(vol.tipo === 'peticion' ? 'peticion' : 'oferta');
+    tarjeta.setAttribute('draggable', 'true');
+    tarjeta.dataset.id = String(vol.id);
+
+    const titulo = document.createElement('p');
+    titulo.classList.add('titulo');
+    titulo.textContent = vol.titulo;
+
+    const descripcion = document.createElement('p');
+    descripcion.classList.add('descripcion');
+    descripcion.textContent = vol.descripcion;
+
+    const meta = document.createElement('p');
+    meta.classList.add('meta');
+    const autorTexto = vol.autor ? ` · Publicado por ${vol.autor}` : '';
+    meta.textContent = `${vol.fecha || ''}${autorTexto}`;
+
+    tarjeta.appendChild(titulo);
+    tarjeta.appendChild(descripcion);
+    tarjeta.appendChild(meta);
+
+    tarjeta.addEventListener('dragstart', (event) => {
+      tarjeta.classList.add('dragging');
+      event.dataTransfer.setData('text/plain', String(vol.id));
+      event.dataTransfer.effectAllowed = 'move';
     });
 
-    destino.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const id = e.dataTransfer.getData('text/plain');
-        const tarjetaArrastrable = document.getElementById(id);
-        console.log(tarjetaArrastrable);
-        
-        if (tarjetaArrastrable) {
-            destino.appendChild(tarjetaArrastrable);
-        }
+    tarjeta.addEventListener('dragend', () => {
+      tarjeta.classList.remove('dragging');
     });
+
+    return tarjeta;
+  }
+
+  function pintarVoluntariados(lista) {
+    if (!listaVoluntariadosDiv) return;
+
+    listaVoluntariadosDiv.innerHTML = '';
+
+    if (!lista || lista.length === 0) {
+      const aviso = document.createElement('p');
+      aviso.classList.add('text-muted');
+      aviso.textContent = "No hay voluntariados para mostrar.";
+      listaVoluntariadosDiv.appendChild(aviso);
+      return;
+    }
+
+    lista.forEach(vol => {
+      const tarjeta = crearTarjetaVoluntariado(vol);
+      listaVoluntariadosDiv.appendChild(tarjeta);
+    });
+  }
+
+  function actualizarMensajeSeleccion() {
+    if (!mensajeSeleccionVacia || !zonaSeleccionDiv) return;
+
+    const hayTarjetasSeleccionadas = zonaSeleccionDiv.querySelectorAll('.tarjeta-voluntariado').length > 0;
+
+    if (hayTarjetasSeleccionadas) {
+      mensajeSeleccionVacia.style.display = 'none';
+    } else {
+      mensajeSeleccionVacia.style.display = 'block';
+    }
+  }
+
+  if (zonaSeleccionDiv) {
+    zonaSeleccionDiv.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      zonaSeleccionDiv.classList.add('drag-over');
+    });
+
+    zonaSeleccionDiv.addEventListener('dragleave', () => {
+      zonaSeleccionDiv.classList.remove('drag-over');
+    });
+
+    zonaSeleccionDiv.addEventListener('drop', (event) => {
+      event.preventDefault();
+      zonaSeleccionDiv.classList.remove('drag-over');
+
+      const idTexto = event.dataTransfer.getData('text/plain');
+      const id = Number(idTexto);
+      if (!id) return;
+
+      const voluntariado = voluntariadosDashboard.find(v => v.id === id);
+      if (!voluntariado) return;
+
+      const yaSeleccionado = seleccionados.some(v => v.id === id);
+      if (yaSeleccionado) return;
+
+      seleccionados.push(voluntariado);
+
+      const tarjetaSeleccion = crearTarjetaVoluntariado(voluntariado);
+      zonaSeleccionDiv.appendChild(tarjetaSeleccion);
+
+      guardarSeleccionEnStorage();
+
+      actualizarMensajeSeleccion();
+    });
+  }
+
+  if (btnFiltroOtros) {
+    btnFiltroOtros.addEventListener('click', () => {
+      const otros = voluntariadosDashboard.filter(v => !v.esPropio);
+      pintarVoluntariados(otros);
+    });
+  }
+
+  if (btnFiltroPropios) {
+    btnFiltroPropios.addEventListener('click', () => {
+      const propios = voluntariadosDashboard.filter(v => v.esPropio);
+      pintarVoluntariados(propios);
+    });
+  }
+
+  pintarVoluntariados(voluntariadosDashboard);
+
+   if (zonaSeleccionDiv) {
+    const idsGuardados = cargarSeleccionDesdeStorage();
+    idsGuardados.forEach(id => {
+      const voluntariado = voluntariadosDashboard.find(v => v.id === id);
+      if (!voluntariado) return;
+
+      seleccionados.push(voluntariado);
+
+      const tarjetaSeleccion = crearTarjetaVoluntariado(voluntariado);
+      zonaSeleccionDiv.appendChild(tarjetaSeleccion);
+    });
+  }
+
+  actualizarMensajeSeleccion();
 });
