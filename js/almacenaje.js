@@ -58,7 +58,8 @@ export function borrarUsuario(email) {
 
 const DB_NAME = 'VoluntariadosDB';
 const STORE_NAME = 'voluntariados';
-const DB_VERSION = 1;
+const SELECCIONADOS_STORE_NAME = 'seleccionados';
+const DB_VERSION = 2; // Incrementar versión para onupgradeneeded
 
 let dbPromise = null;
 
@@ -95,6 +96,11 @@ function initDB() {
                     objectStore.add(voluntariado);
                 });
             }
+
+            // Crear el nuevo almacén para los seleccionados si no existe
+            if (!db.objectStoreNames.contains(SELECCIONADOS_STORE_NAME)) {
+                db.createObjectStore(SELECCIONADOS_STORE_NAME, { keyPath: 'id' });
+            }
         };
     });
 
@@ -117,6 +123,64 @@ export async function obtenerVoluntariados() {
 
         request.onsuccess = (event) => {
             resolve(event.target.result); //Jiji acierto
+        };
+    });
+}
+
+// --- CRUD para Voluntariados Seleccionados ---
+
+export async function obtenerSeleccionados() {
+    const db = await initDB();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([SELECCIONADOS_STORE_NAME], 'readonly');
+        const objectStore = transaction.objectStore(SELECCIONADOS_STORE_NAME);
+        const request = objectStore.getAll();
+
+        request.onerror = (event) => {
+            console.error('Error al obtener seleccionados:', event.target.error);
+            reject('Error al leer de la BD: ' + event.target.error);
+        };
+
+        request.onsuccess = (event) => {
+            // Devolvemos un Set de IDs para búsquedas rápidas
+            const ids = new Set(event.target.result.map(item => item.id));
+            resolve(ids);
+        };
+    });
+}
+
+export async function agregarSeleccionado(voluntariadoId) {
+    const db = await initDB();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([SELECCIONADOS_STORE_NAME], 'readwrite');
+        const objectStore = transaction.objectStore(SELECCIONADOS_STORE_NAME);
+        const request = objectStore.add({ id: voluntariadoId });
+
+        request.onerror = (event) => {
+            console.error('Error al agregar seleccionado:', event.target.error);
+            reject('Error al escribir en la BD: ' + event.target.error);
+        };
+
+        request.onsuccess = () => {
+            resolve();
+        };
+    });
+}
+
+export async function borrarSeleccionado(voluntariadoId) {
+    const db = await initDB();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([SELECCIONADOS_STORE_NAME], 'readwrite');
+        const objectStore = transaction.objectStore(SELECCIONADOS_STORE_NAME);
+        const request = objectStore.delete(voluntariadoId);
+
+        request.onerror = (event) => {
+            console.error('Error al borrar seleccionado:', event.target.error);
+            reject('Error al borrar de la BD: ' + event.target.error);
+        };
+
+        request.onsuccess = () => {
+            resolve();
         };
     });
 }
